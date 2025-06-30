@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Seberapa Sayang Kamu?</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', sans-serif;
+      background: linear-gradient(to right, #ffdde1, #ee9ca7);
+      text-align: center;
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      touch-action: manipulation;
+    }
+
+    .cat-logo {
+      width: 80px;
+      height: 80px;
+      margin-top: 20px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      border: 3px solid white;
+    }
+
+    h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: clamp(1.8rem, 6vw, 2.5rem);
+      margin: 15px 15px 0;
+      color: #d23669;
+      text-shadow: 1px 1px 3px rgba(0,0,0,0.1);
+      line-height: 1.3;
+    }
+
+    #container {
+      margin: 20px 15px;
+      background: rgba(255, 255, 255, 0.3);
+      padding: 20px;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 400px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    }
+
+    .instruction {
+      font-size: clamp(0.9rem, 4vw, 1.1rem);
+      margin-bottom: 20px;
+      color: #555;
+    }
+
+    input[type=range] {
+      width: 100%;
+      height: 20px;
+      -webkit-appearance: none;
+      background: #fff;
+      border-radius: 10px;
+      outline: none;
+      margin: 20px 0;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #d23669;
+      cursor: pointer;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      transition: transform 0.2s;
+      background-image: url('https://cdn-icons-png.flaticon.com/512/616/616408.png');
+      background-size: 70%;
+      background-position: center;
+      background-repeat: no-repeat;
+      background-color: #ff9eb7;
+    }
+
+    input[type=range]::-webkit-slider-thumb:active {
+      transform: scale(1.2);
+    }
+
+    #output {
+      font-size: clamp(1.8rem, 8vw, 2.5rem);
+      margin: 15px 0;
+      color: #d23669;
+      font-weight: bold;
+      transition: all 0.3s;
+    }
+
+    #love {
+      font-size: clamp(2rem, 10vw, 3rem);
+      margin: 15px 0;
+      display: none;
+      animation: pop 0.6s ease forwards;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1.2); opacity: 1; }
+    }
+
+    #gombal {
+      font-size: clamp(1rem, 4.5vw, 1.3rem);
+      display: none;
+      margin: 15px 0;
+      color: #d23669;
+      font-style: italic;
+      animation: fadeIn 1s ease forwards;
+      line-height: 1.4;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+
+    footer {
+      margin-top: auto;
+      padding: 15px;
+      font-size: 0.8rem;
+      color: #d23669;
+    }
+
+    .heart-animation {
+      animation: heartbeat 1s infinite alternate;
+    }
+
+    @keyframes heartbeat {
+      from { transform: scale(1); }
+      to { transform: scale(1.1); }
+    }
+
+    .hidden {
+      display: none;
+    }
+
+    #resetBtn {
+      background-color: #d23669;
+      color: white;
+      border: none;
+      padding: 12px 25px;
+      border-radius: 25px;
+      margin: 15px 0;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.3s;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      width: 80%;
+      max-width: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    #resetBtn:active {
+      background-color: #a51c4d;
+      transform: translateY(2px);
+    }
+
+    .cat-emoji {
+      width: 20px;
+      height: 20px;
+      vertical-align: middle;
+    }
+
+    /* Confetti cats */
+    .cat-confetti {
+      position: fixed;
+      pointer-events: none;
+      animation: fall linear forwards;
+      width: 30px;
+      height: 30px;
+      object-fit: contain;
+    }
+
+    @keyframes fall {
+      to {
+        transform: translateY(calc(100vh + 20px));
+      }
+    }
+
+    /* Touch feedback */
+    .touch-feedback {
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      background: rgba(255, 255, 255, 0.7);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      animation: ripple 0.6s ease-out;
+      z-index: 10;
+    }
+
+    @keyframes ripple {
+      0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(3);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <img src="https://cdn-icons-png.flaticon.com/512/2204/2204346.png" alt="Cute Cat" class="cat-logo">
+  <h1>Seberapa Sayang Kamu Sama Aku? <img src="https://png.pngtree.com/png-clipart/20230417/original/pngtree-cute-kitten-cartoon-png-image_9062557.png" alt="Cat Emoji" style="width:30px;vertical-align:middle"></h1>
+  <div id="container">
+    <p class="instruction">Geser slider sampai ke ujung kanan untuk menunjukkan cintamu!</p>
+    <input type="range" min="0" max="100" value="0" id="slider">
+    <p id="output">0% <img src="https://static.vecteezy.com/system/resources/previews/024/970/500/original/cute-cat-happy-cartoon-ai-generative-free-png.png" alt="Cat Face" class="cat-emoji"></p>
+    <div id="love" class="heart-animation">
+      <img src="https://static.vecteezy.com/system/resources/previews/024/970/500/original/cute-cat-happy-cartoon-ai-generative-free-png.png" alt="Love Cat" style="width:40px">
+      <img src="https://static.vecteezy.com/system/resources/previews/024/970/500/original/cute-cat-happy-cartoon-ai-generative-free-png.png" alt="Love Cat" style="width:40px">
+      <img src="https://static.vecteezy.com/system/resources/previews/024/970/500/original/cute-cat-happy-cartoon-ai-generative-free-png.png" alt="Love Cat" style="width:40px">
+    </div>
+    <div id="gombal">Kamu tuh kayak kucing ini... makin diliat makin bikin aku gemes, real bgt inimah <img src="https://static.vecteezy.com/system/resources/previews/008/483/846/original/cute-cat-cartoon-kitty-pet-png.png" alt="Blushing Cat" style="width:20px;vertical-align:middle"></div>
+    <button id="resetBtn" class="hidden">
+      <img src="https://static.vecteezy.com/system/resources/previews/027/181/905/original/cute-smiling-orange-cat-flat-style-doodle-cartoon-png.png" alt="Play Again" style="width:18px">
+      lagi??
+    </button>
+  </div>
+
+  <footer>
+    Buatan dengan <img src="https://tse2.mm.bing.net/th/id/OIP.uQEroiePS5GNqVhPbMhLyAHaHa?w=900&h=900&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Heart Cat" style="width:15px;vertical-align:middle"> oleh dia untuk kamu!
+  </footer>
+
+  <script>
+    const slider = document.getElementById('slider');
+    const output = document.getElementById('output');
+    const love = document.getElementById('love');
+    const gombal = document.getElementById('gombal');
+    const resetBtn = document.getElementById('resetBtn');
+    const container = document.getElementById('container');
+
+    let isCompleted = false;
+    let touchTimeout;
+
+    // Better touch handling for mobile
+    slider.addEventListener('touchstart', handleTouch, {passive: true});
+    slider.addEventListener('touchend', handleTouchEnd, {passive: true});
+    slider.addEventListener('input', updateSlider);
+
+    // For mouse users
+    slider.addEventListener('mousedown', () => {
+      document.addEventListener('mousemove', updateSlider);
+      document.addEventListener('mouseup', () => {
+        document.removeEventListener('mousemove', updateSlider);
+        checkCompletion();
+      });
+    });
+
+    function handleTouch(e) {
+      // Add visual feedback for touch
+      const touch = e.touches[0];
+      const feedback = document.createElement('div');
+      feedback.className = 'touch-feedback';
+      feedback.style.left = touch.clientX + 'px';
+      feedback.style.top = touch.clientY + 'px';
+      document.body.appendChild(feedback);
+      setTimeout(() => feedback.remove(), 600);
+      
+      // Prevent default to avoid scrolling
+      e.preventDefault();
+      updateSlider(e);
+      
+      // Set timeout for touch end
+      touchTimeout = setTimeout(() => {
+        checkCompletion();
+      }, 100);
+    }
+
+    function handleTouchEnd() {
+      clearTimeout(touchTimeout);
+      checkCompletion();
+    }
+
+    function updateSlider(e) {
+      if (isCompleted) return;
+      
+      let value = parseInt(slider.value);
+      output.innerHTML = value + "% <img src='https://cdn-icons-png.flaticon.com/512/6176/6176808.png' alt='Cat Face' class='cat-emoji'>";
+      
+      // Color change based on value
+      if (value < 30) {
+        output.style.color = "#d23669";
+      } else if (value < 70) {
+        output.style.color = "#e84c88";
+      } else {
+        output.style.color = "#ff6b9e";
+      }
+    }
+
+    function checkCompletion() {
+      let value = parseInt(slider.value);
+      
+      if (value === 100) {
+        isCompleted = true;
+        output.innerHTML = "100% <img src='https://img.itch.zone/aW1nLzEwNTUyNzg0LnBuZw==/original/ER76Og.png' alt='Happy Cat' style='width:30px;vertical-align:middle'>";
+        output.style.color = "#d23669";
+        love.style.display = "block";
+        gombal.style.display = "block";
+        resetBtn.classList.remove('hidden');
+        container.style.background = "rgba(255, 255, 255, 0.5)";
+        
+        // Cat confetti effect
+        createCatConfetti();
+      }
+    }
+
+    // Reset functionality
+    resetBtn.addEventListener('click', resetSlider);
+    resetBtn.addEventListener('touchend', resetSlider);
+
+    function resetSlider() {
+      slider.value = 0;
+      output.innerHTML = "0% <img src='https://cdn-icons-png.flaticon.com/512/6176/6176808.png' alt='Cat Face' class='cat-emoji'>";
+      output.style.color = "#d23669";
+      love.style.display = "none";
+      gombal.style.display = "none";
+      resetBtn.classList.add('hidden');
+      container.style.background = "rgba(255, 255, 255, 0.3)";
+      isCompleted = false;
+    }
+
+    // Create floating cats
+    function createCatConfetti() {
+      const catImages = [
+        'https://cdn-icons-png.flaticon.com/512/2102/2102647.png',
+        'https://cdn-icons-png.flaticon.com/512/616/616430.png',
+        'https://cdn-icons-png.flaticon.com/512/616/616408.png',
+        'https://cdn-icons-png.flaticon.com/512/616/616451.png',
+        'https://cdn-icons-png.flaticon.com/512/3069/3069172.png'
+      ];
+      
+      for (let i = 0; i < 20; i++) {
+        setTimeout(() => {
+          const cat = document.createElement('img');
+          cat.className = 'cat-confetti';
+          cat.src = catImages[Math.floor(Math.random() * catImages.length)];
+          cat.style.left = Math.random() * window.innerWidth + 'px';
+          cat.style.top = -30 + 'px';
+          cat.style.animationDuration = Math.random() * 3 + 2 + 's';
+          cat.style.transform = `rotate(${Math.random() * 360}deg)`;
+          
+          document.body.appendChild(cat);
+          
+          setTimeout(() => {
+            cat.remove();
+          }, 5000);
+        }, i * 150);
+      }
+    }
+
+    // Prevent zooming on double-tap
+    document.addEventListener('dblclick', (e) => {
+      e.preventDefault();
+    }, { passive: false });
+  </script>
+</body>
+</html>
